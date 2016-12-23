@@ -1,0 +1,536 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package Server;
+
+import Client.ClientLogin;
+import Client.Download;
+import Connection.DB;
+import com.sun.corba.se.pept.transport.Acceptor;
+import java.awt.GraphicsDevice;
+import static java.awt.GraphicsDevice.WindowTranslucency.TRANSLUCENT;
+import java.awt.GraphicsEnvironment;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+import javax.swing.filechooser.FileFilter;
+
+/**
+ *
+ * @author selvarani
+ */
+public class SOptions extends javax.swing.JFrame implements Runnable{
+
+    /**
+     * Creates new form SOptions
+     */
+    
+    String us, ip;
+    int port1;
+    int user;
+    String url;
+      int index, serial, j;
+    String files1, filename;
+    String nul[] = {"", "", "", "", "", "", "", "", ""};
+    FileFilter t1, t2, t3, t4, t5;
+    File files[];
+    String s[] = new String[60];
+    JFileChooser chooser;
+    Connection connect;
+    Statement stmt;
+    ResultSet rs;
+    
+    private final int LISTENER_THREADS = 1;
+    Vector<String> ff = new Vector<String>();
+    FileList fl;
+ DB Db=new DB();int port=0;
+  ServerSocket ss=null;
+  String downfile="";
+    public SOptions() {
+       initComponents();
+    }
+
+    SOptions(String user1, int us1, int port2, String ip1) throws IOException{
+        //To change body of generated methods, choose Tools | Templates.
+         user = us1;
+        us = user1;
+     
+      
+        port1 = port2;
+        ip = ip1;
+          System.out.println(us+"-"+ip);
+           fl = new FileList();
+        ff = fl.folders();
+       
+        GraphicsEnvironment ge = 
+            GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice gd = ge.getDefaultScreenDevice();
+
+        //If translucent windows aren't supported, exit.
+        if (!gd.isWindowTranslucencySupported(TRANSLUCENT)) {
+            System.err.println(
+                "Translucency is not supported");
+                System.exit(0);
+        }
+        
+        JFrame.setDefaultLookAndFeelDecorated(true);
+
+        // Create the GUI on the event-dispatching thread
+      
+               // SOptions tw = new SOptions();
+                
+
+                // Set the window to 55% opaque (45% translucent).
+         // setOpacity(0.5f);
+ 
+ initComponents();
+  try {
+          
+            Acceptor acceptor = new Acceptor();
+            for (int i = 0; i < LISTENER_THREADS; i++) {
+                new Thread(acceptor).start();
+                System.out.println("Thread Started");
+            }
+            System.out.println("Connected to Server...");
+
+        } catch (Exception e1) {
+            System.out.println("Exceptions..." + e1);
+        }
+
+    jList1.setListData(ff);
+  setVisible(true);
+                          
+                // Display the window.
+               
+           
+       
+    } 
+
+    @Override
+    public void run() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+  private class Acceptor implements Runnable {
+   
+ public void run() 
+ {
+      try {
+            ss=new ServerSocket(100);
+        System.out.println("Socket waiting at port: " +100);
+     
+    
+       } catch (IOException ex) {
+            Logger.getLogger(SOptions.class.getName()).log(Level.SEVERE, null, ex);
+        }
+     while(true)
+     {
+         
+         try {
+             Socket s=ss.accept();
+       System.out.println("Socket Accepted at Port :"+100);
+      DataInputStream in=new DataInputStream(s.getInputStream());
+      String ipa=in.readUTF();
+      port=in.readInt();
+      
+      String filename=in.readUTF();
+      String op=in.readUTF();
+      System.out.println("***"+op+"-"+ipa+"-"+port);
+             Streaming str = new Streaming(us,ipa, port,filename,op);
+
+             
+         } catch (IOException ex) {
+             Logger.getLogger(SOptions.class.getName()).log(Level.SEVERE, null, ex);
+         }  catch (InterruptedException ex) {
+             Logger.getLogger(SOptions.class.getName()).log(Level.SEVERE, null, ex);
+         } catch (Exception ex) {
+              Logger.getLogger(SOptions.class.getName()).log(Level.SEVERE, null, ex);
+          } 
+         
+   
+     }
+    
+ }
+  }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jPanel1 = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jList1 = new javax.swing.JList();
+        jLabel1 = new javax.swing.JLabel();
+        jButton5 = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("OPTIONS");
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jPanel1.setBackground(new java.awt.Color(90, 59, 178));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "OPTIONS", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Verdana", 1, 12), new java.awt.Color(255, 255, 255))); // NOI18N
+
+        jButton1.setFont(new java.awt.Font("Georgia", 1, 11)); // NOI18N
+        jButton1.setForeground(new java.awt.Color(71, 14, 119));
+        jButton1.setText("UPLOAD");
+        jButton1.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jButton2.setFont(new java.awt.Font("Georgia", 1, 11)); // NOI18N
+        jButton2.setForeground(new java.awt.Color(68, 9, 95));
+        jButton2.setText("VIEW USERS");
+        jButton2.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        jButton3.setFont(new java.awt.Font("Georgia", 1, 11)); // NOI18N
+        jButton3.setForeground(new java.awt.Color(55, 17, 95));
+        jButton3.setText("DOWNLOAD DETAILS");
+        jButton3.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
+        jButton4.setFont(new java.awt.Font("Georgia", 1, 11)); // NOI18N
+        jButton4.setForeground(new java.awt.Color(57, 20, 126));
+        jButton4.setText("CLOSE");
+        jButton4.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
+        jList1.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                jList1ValueChanged(evt);
+            }
+        });
+        jScrollPane1.setViewportView(jList1);
+
+        jLabel1.setFont(new java.awt.Font("Georgia", 1, 11)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 0));
+        jLabel1.setText("UPLOADED FILES");
+
+        jButton5.setFont(new java.awt.Font("Georgia", 1, 11)); // NOI18N
+        jButton5.setForeground(new java.awt.Color(0, 0, 102));
+        jButton5.setText("DELETE");
+        jButton5.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jButton5)
+                .addGap(73, 73, 73)
+                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(27, 27, 27)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton3))
+                .addGap(68, 68, 68)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(24, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addGap(138, 138, 138))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jButton1)
+                        .addGap(62, 62, 62)
+                        .addComponent(jButton2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton3)
+                        .addGap(57, 57, 57)
+                        .addComponent(jButton4)
+                        .addGap(20, 20, 20))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButton5)
+                        .addContainerGap(39, Short.MAX_VALUE))))
+        );
+
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 70, 610, 340));
+
+        jLabel2.setFont(new java.awt.Font("Georgia", 1, 24)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel2.setText("An Adaptive Cloud Downloading Service");
+        jLabel2.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 510, -1));
+
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Server/images/Vector-Art-Flowers-Background-1050x1680.jpg"))); // NOI18N
+        jLabel3.setText("jLabel3");
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 680, 450));
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+         System.out.println("Uploads");
+                String strAPath = "", strPath = "";
+                File file;
+                try {
+                     DB Db=new DB();
+                    JFileChooser jfc = new JFileChooser();
+                    int intDia = jfc.showOpenDialog(null);
+                    if (intDia == JFileChooser.APPROVE_OPTION) {
+                        file = jfc.getSelectedFile();
+                        strPath = file.getPath();
+                        File f1 = new File(strPath);
+                        String fileName = f1.getName();
+                        if(f1.length()>61662235)
+{
+JOptionPane.showMessageDialog(null, "File Size Should not be greater than 60 MB!!!", "WARNING", JOptionPane.WARNING_MESSAGE); 
+}
+else
+{
+
+                        File f2 = new File(System.getProperty("user.dir") + "/Uploads" + "/" + fileName);
+                        boolean exists = f2.exists();
+                        if (!exists) {
+                            InputStream in = new FileInputStream(f1);
+                            //For Append the file.
+                            //OutputStream out = new FileOutputStream(f2,true);
+                            //For Overwrite the file.
+                            OutputStream out = new FileOutputStream(f2);
+                            byte[] buf = new byte[1024];
+                            int len;
+                            try {
+                                while ((len = in.read(buf)) > 0) {
+                                    out.write(buf, 0, len);
+                                }
+                                in.close();
+                                out.close();
+                                System.out.println("File Uploaded here.");  
+                               
+                                ff.clear();
+                                ff = fl.folders();
+                                jList1.removeAll();  
+                                
+                                jList1.setListData(ff);
+                                System.out.println("UPLOADED FILE First : "+ff);
+                               
+                   int i = f1.getName().lastIndexOf('.');
+                   String extension = "";
+if (i > 0) {
+    extension =f1.getName().substring(i+1);
+}
+                    System.out.println("Selected file Extension is :  " + extension);
+                                 Db.Insert("insert into upfile values('"+us+"','"+f1.getName()+"','"+f1.length()+" Bytes"+"','"+extension+"')");
+                                JOptionPane.showMessageDialog(null, "File Uploaded Successfully");
+                            } catch (Exception trss) {
+                            }
+                        } else if (exists) {
+                            int answer = JOptionPane.showConfirmDialog(null, "File Already Exist you can OverWrite");
+                            if (answer == JOptionPane.YES_OPTION) {
+                                InputStream in = new FileInputStream(f1);
+                                //For Append the file.
+                                //OutputStream out = new FileOutputStream(f2,true);
+                                //For Overwrite the file.
+                                OutputStream out = new FileOutputStream(f2);
+                                byte[] buf = new byte[1024];
+                                int len;
+                                try {
+                                    while ((len = in.read(buf)) > 0) {
+                                        out.write(buf, 0, len);
+                                    }
+                                    in.close();
+                                    out.close();
+                                    System.out.println("File Uploaded.");
+                                   
+                                  
+                                    ff.clear();
+                                    ff = fl.folders();
+                                    jList1.removeAll();
+                                    jList1.setListData(ff);
+                                    System.out.println("UPLOADED FILE Second : "+ff);
+                                    JOptionPane.showMessageDialog(null, "File Uploaded Successfully");
+                                } catch (Exception trss) {
+                                }
+                            } else {
+                                JOptionPane.showMessageDialog(null, "File not saved");
+                            }
+                        }
+                    }
+                    }
+                } catch (FileNotFoundException ex) {
+                    System.out.println(ex.getMessage() + " in  the specified directory.");
+                    //System.exit(0);
+                }
+
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    try {
+                    String q1 = "UPDATE Registration SET ip='',status='OFF' WHERE  username='"+us+"'";
+                    Db.Insert(q1);
+                    Db.Insert("UPDATE nodedetail SET status='OFF' WHERE node='" + us + "'");
+                                      //setVisible(false);
+                //ServerLogin l = new ServerLogin("a");
+                      System.exit(0);
+                } catch (Exception ex2) {
+                    ex2.printStackTrace();
+                }
+
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        try {      
+            ViewUsers d=new ViewUsers(us,user,ip,port,"Help");
+        } catch (SQLException ex) {
+            Logger.getLogger(SOptions.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    try {      
+            DownloadDetails d=new DownloadDetails(us,user,ip,port,"Help");
+        } catch (SQLException ex) {
+            Logger.getLogger(SOptions.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+  try {
+         boolean st=false;
+         if(downfile.compareToIgnoreCase("")!=0)
+{ 
+    File file = new File(System.getProperty("user.dir") + "/Uploads"+"/" + downfile);
+
+        if(file.delete()){
+            
+                         st=true;     
+        }
+        else{
+    			 JOptionPane.showMessageDialog(null, "'"+downfile+"' is Deleteion Failed", "Error", JOptionPane.ERROR_MESSAGE);
+    		}
+        if(st==true)
+        { ff.clear();
+                                    ff = fl.folders();
+                                    jList1.removeAll();
+                                    jList1.setListData(ff);
+            
+    			 JOptionPane.showMessageDialog(null, "'"+downfile+"' is Deleted Succesfully", "Information", JOptionPane.INFORMATION_MESSAGE);
+                         downfile="";
+    		}
+}
+         else
+             JOptionPane.showMessageDialog(null, "You Have not Choosen any file to Download", "Error", JOptionPane.ERROR_MESSAGE);
+     } catch (Exception ex) {
+         Logger.getLogger(Client.DownloadDetails.class.getName()).log(Level.SEVERE, null, ex);
+     }
+    }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jList1ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList1ValueChanged
+        if (!evt.getValueIsAdjusting()) {
+            System.out.println("Came here");
+            Object o = jList1.getSelectedValue();
+            if(o!=null)
+            {
+            System.out.println(o.toString() + " is selected.");
+            downfile = o.toString();
+             System.out.println(downfile);
+        }
+        }
+    }//GEN-LAST:event_jList1ValueChanged
+
+    /**
+     * @param args the command line arguments
+     */
+  public static void main(String[] args) {
+        // Determine if the GraphicsDevice supports translucency.
+        GraphicsEnvironment ge = 
+            GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice gd = ge.getDefaultScreenDevice();
+
+        //If translucent windows aren't supported, exit.
+        if (!gd.isWindowTranslucencySupported(TRANSLUCENT)) {
+            System.err.println(
+                "Translucency is not supported");
+                System.exit(0);
+        }
+        
+        JFrame.setDefaultLookAndFeelDecorated(true);
+
+        // Create the GUI on the event-dispatching thread
+       
+                SOptions tw = new SOptions();
+
+                // Set the window to 55% opaque (45% translucent).
+          tw.setOpacity(0.5f);
+
+                // Display the window.
+                tw.setVisible(true);
+            
+        
+    }
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JList jList1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    // End of variables declaration//GEN-END:variables
+}
